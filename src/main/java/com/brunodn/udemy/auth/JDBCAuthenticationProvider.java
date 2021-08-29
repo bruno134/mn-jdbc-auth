@@ -12,6 +12,7 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Singleton
@@ -42,7 +43,10 @@ public class JDBCAuthenticationProvider implements AuthenticationProvider{
 
                 if(secret.equals(mayBeUser.get().getPassword())){
                     LOG.debug("User is logged in.");
-                    emitter.onNext(AuthenticationResponse.success((String) authenticationRequest.getIdentity()));
+                    final HashMap<String,Object> attributes = new HashMap<>();
+                    attributes.put("hair_color", "brown");
+                    attributes.put("language","en");
+                    emitter.onNext(AuthenticationResponse.success((String)mayBeUser.get().getEmail(),attributes));
                     emitter.onComplete();
                 }else{
                     LOG.debug("Password is incorrect");
